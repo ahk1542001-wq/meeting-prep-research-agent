@@ -1,6 +1,8 @@
 # Meeting Prep Brief: Satya Nadella
 
-_Researched on 2026-11-20 11:11 UTC with the Tavily API._
+_Researched on 2026-11-20 11:13 UTC with the Tavily API._
+_Their role: a potential employer_
+_This meeting is for: a first conversation about joining an AI product team_
 _Meeting purpose: interview_
 _Presenting: four years building AI agents and automation with n8n_
 _Desired outcome: an AI product role_
@@ -78,8 +80,8 @@ Source: https://www.cnbc.com/2020/02/21/microsoft-senior-leadership-team-under-s
 
 ## Questions to ask
 
-1. My background is four years building AI agents and automation with n8n — where would that experience actually get used in this team?
-2. I am hoping this process leads to an AI product role — what are the next steps, and who makes the final decision?
-3. A recent story was headlined "Microsoft Ignite 2026 Announcements: Full Recap" — how is that shaping the team's work right now?
-4. A recent story was headlined "Satya Nadella Microsoft Ignite 2026 Keynote Open" — how is that shaping the team's work right now?
-5. The snapshot above summarises Satya Nadella — which part of it is this team focused on this year?
+1. As a potential employer — what do you most want to get out of this meeting?
+2. This meeting is for a first conversation about joining an AI product team — what needs to be true by the end of it for you to call it time well spent?
+3. My background is four years building AI agents and automation with n8n — where would that experience actually get used in this team?
+4. I am hoping this process leads to an AI product role — what are the next steps, and who makes the final decision?
+5. A recent story was headlined "Microsoft Ignite 2026 Announcements: Full Recap" — how is that shaping the team's work right now?

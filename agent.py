@@ -7,15 +7,16 @@ briefing you can read in two minutes before the meeting.
 
 Usage:
     python agent.py "Acme Corp"
-    python agent.py "Acme Corp" --purpose sales \
+    python agent.py "Acme Corp" --relationship "a prospective client" \
+        --agenda "a first demo" --purpose sales \
         --offering "our onboarding service" --goal "a paid pilot"
     python agent.py "Acme Corp" --context "partnership discussion"
     python agent.py "Jane Smith, CEO of Acme" --out jane.md
 
 The questions at the end of the brief are driven by the meeting
-context: --purpose / --offering / --goal (structured) or --context
-(free text). With no context at all, the brief asks for it instead
-of printing generic questions.
+context: --relationship / --agenda / --purpose / --offering / --goal
+(structured) or --context (free text). With no context at all, the
+brief asks for it instead of printing generic questions.
 
 Requires a Tavily API key in the TAVILY_API_KEY environment variable
 (or in a .env file next to this script). Get one at https://tavily.com
@@ -151,6 +152,8 @@ def build_questions(subject, context, structured, overview, news, people):
     results, and the rest point at sections of this brief. When no
     context is supplied at all, this returns no questions and the
     brief asks for the context instead (clarify-first)."""
+    relationship = (structured.get("relationship") or "").strip()
+    agenda = (structured.get("agenda") or "").strip()
     purpose = (structured.get("purpose") or "").strip()
     offering = (structured.get("offering") or "").strip()
     goal = (structured.get("goal") or "").strip()
@@ -158,7 +161,21 @@ def build_questions(subject, context, structured, overview, news, people):
     has_people = bool((people.get("answer") or "").strip())
     has_overview = bool((overview.get("answer") or "").strip())
     has_news = bool(news.get("answer"))
-    questions = []
+    # The two lead questions come first in every structured mode:
+    # who this person is to you, and what this meeting is for.
+    lead = []
+    if relationship:
+        lead.append(
+            f"As {relationship} — what do you most want to get "
+            "out of this meeting?"
+        )
+    if agenda:
+        lead.append(
+            f"This meeting is for {agenda} — what needs to be "
+            "true by the end of it for you to call it time "
+            "well spent?"
+        )
+    questions = list(lead)
     if kind == "sales":
         if offering:
             questions.append(
@@ -235,9 +252,10 @@ def build_questions(subject, context, structured, overview, news, people):
                 "Of the recent developments above, is any of "
                 "it about to change what you need from us?"
             )
-    elif purpose:
-        # A purpose with no dedicated template: frame questions
-        # from the user's own words, then the findings.
+    elif purpose or offering or goal or relationship or agenda:
+        # Structured context without a dedicated purpose template
+        # (or with only some fields): frame questions from the
+        # user's own words, then the findings.
         if offering:
             questions.append(
                 f"I want to present {offering} — what should I "
@@ -292,6 +310,12 @@ def build_brief(subject, context, structured, overview, news, people):
     lines.append(f"_Researched on {now} with the Tavily API._")
     if context:
         lines.append(f"_Meeting context: {context}_")
+    if (structured.get("relationship") or "").strip():
+        lines.append(
+            f"_Their role: {structured['relationship'].strip()}_")
+    if (structured.get("agenda") or "").strip():
+        lines.append(
+            f"_This meeting is for: {structured['agenda'].strip()}_")
     if (structured.get("purpose") or "").strip():
         lines.append(f"_Meeting purpose: {structured['purpose'].strip()}_")
     if (structured.get("offering") or "").strip():
@@ -354,7 +378,10 @@ def build_brief(subject, context, structured, overview, news, people):
     if questions:
         for i, q in enumerate(questions, 1):
             lines.append(f"{i}. {q}")
-    elif not (structured.get("purpose") or "").strip() and not context:
+    elif not any(
+        (structured.get(k) or "").strip()
+        for k in ("relationship", "agenda", "purpose", "offering", "goal")
+    ) and not context:
         # Clarify-first: with no meeting context, generic questions
         # would be noise. Say what is missing and how to add it
         # instead of inventing a purpose for the user.
@@ -364,6 +391,13 @@ def build_brief(subject, context, structured, overview, news, people):
             "Add it and re-run:_"
         )
         lines.append("")
+        lines.append(
+            "- `--relationship` — who they are to you: a "
+            "prospective client, a partner, an employer"
+        )
+        lines.append(
+            "- `--agenda` — what this specific meeting is for"
+        )
         lines.append(
             "- `--purpose` — the meeting type: sales, partnership, "
             "interview, client"
@@ -392,6 +426,11 @@ def main():
     parser.add_argument("subject", help='Who you are meeting, e.g. "Acme Corp"')
     parser.add_argument("--context", default="",
                         help='Why you are meeting them, e.g. "sales call"')
+    parser.add_argument("--relationship", default="",
+                        help="Who they are to you: a prospective "
+                             "client, a partner, an employer")
+    parser.add_argument("--agenda", default="",
+                        help="What this specific meeting is for")
     parser.add_argument("--purpose", default="",
                         help="Meeting type: sales, partnership, "
                              "interview, client (drives the questions)")
@@ -410,6 +449,8 @@ def main():
     # questions section instead of generic questions.
     if (
         not args.context
+        and not args.relationship
+        and not args.agenda
         and not args.purpose
         and not args.offering
         and not args.goal
@@ -417,14 +458,21 @@ def main():
     ):
         print("No meeting context given — the questions section "
               "is sharper with it (blank answers are fine).")
+        args.relationship = input(
+            "Who are they to you (a prospective client, a "
+            "partner, an employer...)? ").strip()
+        args.agenda = input(
+            "What is this specific meeting for? ").strip()
         args.purpose = input(
-            "Meeting purpose (sales / partnership / interview / "
+            "Meeting type (sales / partnership / interview / "
             "client / your own words): ").strip()
         args.offering = input(
             "What do you want to present or propose? ").strip()
         args.goal = input(
             "What outcome do you want from the meeting? ").strip()
     structured = {
+        "relationship": args.relationship,
+        "agenda": args.agenda,
         "purpose": args.purpose,
         "offering": args.offering,
         "goal": args.goal,

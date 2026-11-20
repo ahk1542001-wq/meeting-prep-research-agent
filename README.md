@@ -38,7 +38,8 @@ walk in cold.
 4. **Suggests questions to ask** in the meeting, driven by the meeting
    context first and the research second — a sales call and a job
    interview with the same company get different questions. Give the
-   context in structured form (`--purpose`, `--offering`, `--goal`) or
+   context in structured form (`--relationship`, `--agenda`,
+   `--purpose`, `--offering`, `--goal`) or
    as free text (`--context`). With no context at all, the brief does
    not print generic questions: it asks for the context instead
    (clarify-first). Nothing is invented either way — context questions
@@ -72,14 +73,18 @@ For the sharpest questions, give the meeting context in structured
 form — the questions are built from it:
 
 ```bash
-python agent.py "Acme Corp" --purpose sales \
+python agent.py "Acme Corp" --relationship "a prospective client" \
+    --agenda "a first demo" --purpose sales \
     --offering "our onboarding service" --goal "a paid pilot"
 ```
 
-`--purpose` is the meeting type (sales, partnership, interview,
-client, or your own words), `--offering` is what you want to present
-or propose, and `--goal` is the outcome you want. Run interactively
-with no context and the agent asks for these three before it starts.
+The five fields, in order: `--relationship` is who they are to you
+(a prospective client, a partner, an employer), `--agenda` is what
+this specific meeting is for, `--purpose` is the meeting type
+(sales, partnership, interview, client, or your own words),
+`--offering` is what you want to present or propose, and `--goal`
+is the outcome you want. Any subset helps; run interactively with
+no context and the agent asks for all five before it starts.
 
 The brief is printed to the terminal and saved as `brief-<subject>.md`.
 
