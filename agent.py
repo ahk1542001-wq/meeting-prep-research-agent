@@ -7,8 +7,15 @@ briefing you can read in two minutes before the meeting.
 
 Usage:
     python agent.py "Acme Corp"
+    python agent.py "Acme Corp" --purpose sales \
+        --offering "our onboarding service" --goal "a paid pilot"
     python agent.py "Acme Corp" --context "partnership discussion"
     python agent.py "Jane Smith, CEO of Acme" --out jane.md
+
+The questions at the end of the brief are driven by the meeting
+context: --purpose / --offering / --goal (structured) or --context
+(free text). With no context at all, the brief asks for it instead
+of printing generic questions.
 
 Requires a Tavily API key in the TAVILY_API_KEY environment variable
 (or in a .env file next to this script). Get one at https://tavily.com
@@ -95,15 +102,32 @@ def clean_title(title, limit=110):
     return title
 
 
-def build_questions(subject, context, overview, news, people):
-    """Questions to ask in the meeting, derived only from what the
-    research actually found. Deterministic, like the rest of the
-    brief: news questions quote real headlines from the results,
-    the remaining questions point at sections of this brief or at
-    the meeting context the user supplied. Nothing is invented."""
-    questions = []
+# How a headline question is framed depends on why the meeting is
+# happening. The headline itself always comes from the results.
+HEADLINE_FRAMES = {
+    "sales": (
+        "is that creating any pressure or opportunity on your "
+        "side that we should talk about?"
+    ),
+    "partnership": (
+        "how does that affect what a partner could build with "
+        "you this year?"
+    ),
+    "interview": "how is that shaping the team's work right now?",
+    "client": "is that changing anything about the work we do together?",
+}
+HEADLINE_FRAME_DEFAULT = (
+    "what is the background to it, and where is it heading?"
+)
+
+
+def headline_questions(news, purpose=""):
+    frame = HEADLINE_FRAMES.get(
+        (purpose or "").strip().lower(), HEADLINE_FRAME_DEFAULT
+    )
+    out = []
     for item in top_results(news, 5):
-        if len(questions) >= 2:
+        if len(out) >= 2:
             break
         title = clean_title(item["title"])
         # Very short titles are page labels ("Blog | Tavily"),
@@ -112,37 +136,155 @@ def build_questions(subject, context, overview, news, people):
         # too, however long they are.
         if len(title) < 30 or "latest news" in title.lower():
             continue
-        questions.append(
-            f'A recent story was headlined "{title}" — '
-            "what is the background to it, and where is it heading?"
-        )
-    if context:
-        questions.append(
-            f'This meeting\'s context is "{context}" — what would '
-            "a successful outcome look like from your side?"
-        )
-    if (people.get("answer") or "").strip():
-        questions.append(
-            "The key people above lead this area — what are their "
-            "current priorities, and what do they look for first "
-            "when someone brings them a proposal?"
-        )
-    if (overview.get("answer") or "").strip():
-        questions.append(
-            f"The snapshot above summarises what {subject} does — "
-            "which part of that is the top priority right now, and "
-            "what is the biggest obstacle to it?"
-        )
-    if news.get("answer"):
-        questions.append(
-            "Of the recent developments above, which one matters "
-            "most for the next quarter — and which is most likely "
-            "to be misunderstood by outsiders?"
-        )
+        out.append(f'A recent story was headlined "{title}" — {frame}')
+    return out
+
+
+def build_questions(subject, context, structured, overview, news, people):
+    """Questions to ask in the meeting. They are driven by the
+    meeting context first and the research second, because a good
+    question depends on what the meeting is for: the same company
+    gets different questions for a sales call than for a job
+    interview. Everything is still deterministic and grounded —
+    context questions quote the user's own purpose / offering /
+    goal text, headline questions quote real headlines from the
+    results, and the rest point at sections of this brief. When no
+    context is supplied at all, this returns no questions and the
+    brief asks for the context instead (clarify-first)."""
+    purpose = (structured.get("purpose") or "").strip()
+    offering = (structured.get("offering") or "").strip()
+    goal = (structured.get("goal") or "").strip()
+    kind = purpose.lower()
+    has_people = bool((people.get("answer") or "").strip())
+    has_overview = bool((overview.get("answer") or "").strip())
+    has_news = bool(news.get("answer"))
+    questions = []
+    if kind == "sales":
+        if offering:
+            questions.append(
+                f"I would like to show you {offering} — before I "
+                "do, what does your current setup for this look "
+                "like, and where does it fall short?"
+            )
+        if goal:
+            questions.append(
+                f"If we could get to {goal} — who else on your "
+                "side would need to be convinced, and what would "
+                "they ask first?"
+            )
+        questions += headline_questions(news, kind)
+        if has_people:
+            questions.append(
+                "The key people above run this area — who owns "
+                "the budget for something like this, and what do "
+                "they measure success by?"
+            )
+    elif kind == "partnership":
+        if offering:
+            questions.append(
+                f"We bring {offering} — where would that fit "
+                "best in what you are building, and what would "
+                "you want from a partner in return?"
+            )
+        if goal:
+            questions.append(
+                f"For {goal} to work, what would each side need "
+                "to commit in the first 90 days?"
+            )
+        questions += headline_questions(news, kind)
+        if has_news:
+            questions.append(
+                "Of the recent developments above, which one "
+                "opens the most room for a partner right now?"
+            )
+    elif kind == "interview":
+        if offering:
+            questions.append(
+                f"My background is {offering} — where would that "
+                "experience actually get used in this team?"
+            )
+        if goal:
+            questions.append(
+                f"I am hoping this process leads to {goal} — "
+                "what are the next steps, and who makes the "
+                "final decision?"
+            )
+        questions += headline_questions(news, kind)
+        if has_overview:
+            questions.append(
+                f"The snapshot above summarises {subject} — "
+                "which part of it is this team focused on "
+                "this year?"
+            )
+    elif kind == "client":
+        if offering:
+            questions.append(
+                f"Since we last spoke I have been working on "
+                f"{offering} — does that address the problem you "
+                "raised, or has the problem moved?"
+            )
+        if goal:
+            questions.append(
+                f"Today I would like us to leave with {goal} — "
+                "what would you need to see for that to be an "
+                "easy yes?"
+            )
+        questions += headline_questions(news, kind)
+        if has_news:
+            questions.append(
+                "Of the recent developments above, is any of "
+                "it about to change what you need from us?"
+            )
+    elif purpose:
+        # A purpose with no dedicated template: frame questions
+        # from the user's own words, then the findings.
+        if offering:
+            questions.append(
+                f"I want to present {offering} — what should I "
+                "understand about your side before I do?"
+            )
+        if goal:
+            questions.append(
+                f"I am hoping for {goal} from this meeting — "
+                "what would a successful outcome look like from "
+                "your side?"
+            )
+        questions += headline_questions(news)
+        if has_people:
+            questions.append(
+                "The key people above lead this area — what are "
+                "their current priorities?"
+            )
+    elif context:
+        # Free-text --context only.
+        questions += headline_questions(news)
+        if context:
+            questions.append(
+                f'This meeting\'s context is "{context}" — what '
+                "would a successful outcome look like from your side?"
+            )
+        if has_people:
+            questions.append(
+                "The key people above lead this area — what are "
+                "their current priorities, and what do they look "
+                "for first when someone brings them a proposal?"
+            )
+        if has_overview:
+            questions.append(
+                f"The snapshot above summarises what {subject} "
+                "does — which part of that is the top priority "
+                "right now, and what is the biggest obstacle to it?"
+            )
+        if has_news:
+            questions.append(
+                "Of the recent developments above, which one "
+                "matters most for the next quarter — and which "
+                "is most likely to be misunderstood by outsiders?"
+            )
     return questions[:5]
 
 
-def build_brief(subject, context, overview, news, people):
+def build_brief(subject, context, structured, overview, news, people):
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines = []
     lines.append(f"# Meeting Prep Brief: {subject}")
@@ -150,6 +292,12 @@ def build_brief(subject, context, overview, news, people):
     lines.append(f"_Researched on {now} with the Tavily API._")
     if context:
         lines.append(f"_Meeting context: {context}_")
+    if (structured.get("purpose") or "").strip():
+        lines.append(f"_Meeting purpose: {structured['purpose'].strip()}_")
+    if (structured.get("offering") or "").strip():
+        lines.append(f"_Presenting: {structured['offering'].strip()}_")
+    if (structured.get("goal") or "").strip():
+        lines.append(f"_Desired outcome: {structured['goal'].strip()}_")
     lines.append("")
 
     lines.append("## Snapshot")
@@ -200,10 +348,35 @@ def build_brief(subject, context, overview, news, people):
 
     lines.append("## Questions to ask")
     lines.append("")
-    questions = build_questions(subject, context, overview, news, people)
+    questions = build_questions(
+        subject, context, structured, overview, news, people
+    )
     if questions:
         for i, q in enumerate(questions, 1):
             lines.append(f"{i}. {q}")
+    elif not (structured.get("purpose") or "").strip() and not context:
+        # Clarify-first: with no meeting context, generic questions
+        # would be noise. Say what is missing and how to add it
+        # instead of inventing a purpose for the user.
+        lines.append(
+            "_Not generated — good questions depend on what this "
+            "meeting is for, and no meeting context was supplied. "
+            "Add it and re-run:_"
+        )
+        lines.append("")
+        lines.append(
+            "- `--purpose` — the meeting type: sales, partnership, "
+            "interview, client"
+        )
+        lines.append(
+            "- `--offering` — what you want to present or propose"
+        )
+        lines.append("- `--goal` — the outcome you want")
+        lines.append("")
+        lines.append(
+            '_Or pass a free-text `--context "..."`. The research '
+            "above stands either way._"
+        )
     else:
         lines.append(
             "Not enough was found about this subject to suggest "
@@ -219,9 +392,43 @@ def main():
     parser.add_argument("subject", help='Who you are meeting, e.g. "Acme Corp"')
     parser.add_argument("--context", default="",
                         help='Why you are meeting them, e.g. "sales call"')
+    parser.add_argument("--purpose", default="",
+                        help="Meeting type: sales, partnership, "
+                             "interview, client (drives the questions)")
+    parser.add_argument("--offering", default="",
+                        help="What you want to present or propose")
+    parser.add_argument("--goal", default="",
+                        help="The outcome you want from the meeting")
     parser.add_argument("--out", default="",
                         help="Output markdown file (default: brief-<subject>.md)")
     args = parser.parse_args()
+
+    # Clarify-first: questions depend on the meeting context, so
+    # when an interactive user gives none at all, ask for the
+    # structured fields before researching. Non-interactive runs
+    # skip this; their brief carries a context-needed note in the
+    # questions section instead of generic questions.
+    if (
+        not args.context
+        and not args.purpose
+        and not args.offering
+        and not args.goal
+        and sys.stdin.isatty()
+    ):
+        print("No meeting context given — the questions section "
+              "is sharper with it (blank answers are fine).")
+        args.purpose = input(
+            "Meeting purpose (sales / partnership / interview / "
+            "client / your own words): ").strip()
+        args.offering = input(
+            "What do you want to present or propose? ").strip()
+        args.goal = input(
+            "What outcome do you want from the meeting? ").strip()
+    structured = {
+        "purpose": args.purpose,
+        "offering": args.offering,
+        "goal": args.goal,
+    }
 
     api_key = load_api_key()
     if not api_key:
@@ -247,7 +454,8 @@ def main():
         api_key, f"{subject} founder CEO leadership team", max_results=5)
 
     print("[agent] Writing the brief")
-    brief = build_brief(subject, args.context, overview, news, people)
+    brief = build_brief(
+        subject, args.context, structured, overview, news, people)
     out_path = args.out or f"brief-{slugify(subject)}.md"
     with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(brief)

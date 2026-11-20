@@ -1,7 +1,9 @@
 # Meeting Prep Brief: Satya Nadella
 
-_Researched on 2026-11-20 11:06 UTC with the Tavily API._
-_Meeting context: partnership discussion_
+_Researched on 2026-11-20 11:11 UTC with the Tavily API._
+_Meeting purpose: interview_
+_Presenting: four years building AI agents and automation with n8n_
+_Desired outcome: an AI product role_
 
 ## Snapshot
 
@@ -76,8 +78,8 @@ Source: https://www.cnbc.com/2020/02/21/microsoft-senior-leadership-team-under-s
 
 ## Questions to ask
 
-1. A recent story was headlined "Microsoft Ignite 2026 Announcements: Full Recap" — what is the background to it, and where is it heading?
-2. A recent story was headlined "Satya Nadella Microsoft Ignite 2026 Keynote Open" — what is the background to it, and where is it heading?
-3. This meeting's context is "partnership discussion" — what would a successful outcome look like from your side?
-4. The key people above lead this area — what are their current priorities, and what do they look for first when someone brings them a proposal?
-5. The snapshot above summarises what Satya Nadella does — which part of that is the top priority right now, and what is the biggest obstacle to it?
+1. My background is four years building AI agents and automation with n8n — where would that experience actually get used in this team?
+2. I am hoping this process leads to an AI product role — what are the next steps, and who makes the final decision?
+3. A recent story was headlined "Microsoft Ignite 2026 Announcements: Full Recap" — how is that shaping the team's work right now?
+4. A recent story was headlined "Satya Nadella Microsoft Ignite 2026 Keynote Open" — how is that shaping the team's work right now?
+5. The snapshot above summarises Satya Nadella — which part of it is this team focused on this year?

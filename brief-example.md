@@ -1,7 +1,9 @@
 # Meeting Prep Brief: Tavily
 
-_Researched on 2026-11-20 11:06 UTC with the Tavily API._
-_Meeting context: API partnership call_
+_Researched on 2026-11-20 11:11 UTC with the Tavily API._
+_Meeting purpose: partnership_
+_Presenting: meeting-prep tooling built on the Tavily API_
+_Desired outcome: an API partnership with startup credits_
 
 ## Snapshot
 
@@ -76,8 +78,8 @@ Source: https://www.investing.com/news/company-news/nebius-to-acquire-tavily-for
 
 ## Questions to ask
 
-1. A recent story was headlined "Tavily Launches for Startups with Free API Credits and Support" — what is the background to it, and where is it heading?
-2. A recent story was headlined "Tavily API Pricing: Credits and Rate Limits (2026)" — what is the background to it, and where is it heading?
-3. This meeting's context is "API partnership call" — what would a successful outcome look like from your side?
-4. The key people above lead this area — what are their current priorities, and what do they look for first when someone brings them a proposal?
-5. The snapshot above summarises what Tavily does — which part of that is the top priority right now, and what is the biggest obstacle to it?
+1. We bring meeting-prep tooling built on the Tavily API — where would that fit best in what you are building, and what would you want from a partner in return?
+2. For an API partnership with startup credits to work, what would each side need to commit in the first 90 days?
+3. A recent story was headlined "Tavily Launches for Startups with Free API Credits and Support" — how does that affect what a partner could build with you this year?
+4. A recent story was headlined "Tavily API Pricing: Credits and Rate Limits (2026)" — how does that affect what a partner could build with you this year?
+5. Of the recent developments above, which one opens the most room for a partner right now?
