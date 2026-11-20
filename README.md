@@ -39,7 +39,7 @@ walk in cold.
    context first and the research second — a sales call and a job
    interview with the same company get different questions. Give the
    context in structured form (`--relationship`, `--agenda`,
-   `--purpose`, `--offering`, `--goal`) or
+   `--when`, `--where`, `--purpose`, `--offering`, `--goal`) or
    as free text (`--context`). With no context at all, the brief does
    not print generic questions: it asks for the context instead
    (clarify-first). Nothing is invented either way — context questions
@@ -74,17 +74,25 @@ form — the questions are built from it:
 
 ```bash
 python agent.py "Acme Corp" --relationship "a prospective client" \
-    --agenda "a first demo" --purpose sales \
-    --offering "our onboarding service" --goal "a paid pilot"
+    --agenda "a first demo" --when 2026-11-25 --where "online" \
+    --purpose sales --offering "our onboarding service" \
+    --goal "a paid pilot"
 ```
 
-The five fields, in order: `--relationship` is who they are to you
-(a prospective client, a partner, an employer), `--agenda` is what
-this specific meeting is for, `--purpose` is the meeting type
-(sales, partnership, interview, client, or your own words),
-`--offering` is what you want to present or propose, and `--goal`
-is the outcome you want. Any subset helps; run interactively with
-no context and the agent asks for all five before it starts.
+The seven fields, in order: `--relationship` is who they are to
+you (a prospective client, a partner, an employer), `--agenda` is
+what this specific meeting is for, `--when` is the meeting date,
+`--where` is the place (in person or online), `--purpose` is the
+meeting type (sales, partnership, interview, client, or your own
+words), `--offering` is what you want to present or propose, and
+`--goal` is the outcome you want. Any subset helps; run
+interactively with no context and the agent asks for all seven
+before it starts.
+
+The date does real work: a meeting within a week narrows the news
+search to the last week instead of the last month, and a meeting
+within three days adds a question about which fresh development is
+most likely to come up first.
 
 The brief is printed to the terminal and saved as `brief-<subject>.md`.
 

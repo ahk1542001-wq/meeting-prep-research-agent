@@ -1,8 +1,10 @@
 # Meeting Prep Brief: Tavily
 
-_Researched on 2026-11-20 11:13 UTC with the Tavily API._
+_Researched on 2026-11-20 11:15 UTC with the Tavily API._
 _Their role: a prospective API partner_
 _This meeting is for: exploring a partnership for meeting-prep tooling_
+_When: 2026-11-24 (in 4 days)_
+_Where: online (video call)_
 _Meeting purpose: partnership_
 _Presenting: meeting-prep tooling built on the Tavily API_
 _Desired outcome: an API partnership with startup credits_
@@ -11,13 +13,13 @@ _Desired outcome: an API partnership with startup credits_
 
 Tavily builds a search‑layer API that lets AI agents access real‑time, verified web information for Retrieval‑Augmented Generation (RAG) applications. Its platform provides high‑performance web search, crawling and structured data extraction so that large language models can incorporate up‑to‑date external knowledge, reduce hallucinations and comply with enterprise governance policies. The service is aimed at developers and businesses creating AI agents, offering a usage‑based API that integrates public and private sources into LLM‑driven workflows.
 
-## Recent developments (last month)
+## Recent developments (last week)
 
-Tavily launched a program for startups offering free API credits and support. They are also participating in the Snowflake Summit in San Francisco. Tavily's Company Search Benchmark ranks first among evaluated providers. The company was acquired by Nebius for $275 million, potentially up to $400 million with incentives.
+Tavily is a search API built for AI agents and retrieval-augmented generation, offering real-time web search results designed for grounded answer generation, RAG pipelines, and research agents. It provides relevant, source-backed web results, concise snippets, URLs, and metadata for efficient use in AI applications. Tavily has been integrated into AWS Marketplace and offers usage-based access with support for x402 and AWS Agent Pay. Tavily has raised a total of $70 million in funding through four rounds, including a Series A round in September 2025. Tavily has also developed its own official plugin for Hermes Agent, which allows for comprehensive site mapping and research capabilities. The company competes with alternatives like Linkup, which offers a similar search experience with different depth levels.
 
-- **Tavily Launches for Startups with Free API Credits and Support | Renee Wells-Wood posted on the topic | LinkedIn** — Big news from the team at Tavily: we’re launching Tavily for Startups. 🚀 Building AI agents at an early-stage, VC-backed company (pre-seed to Series A)? We want to help you ship faster. Here’s what’s included: → Up to 10... ([source](https://www.linkedin.com/posts/renee-wells-wood-64758812_big-news-from-the-team-at-tavily-were-launching-activity-7518702822683631616-6u3a))
-- **Blog | Tavily** — Today we’re introducing Tavily’s Company Search Benchmark. It reflects real agent tasks and tests how much of a company’s story search engines can uncover for your agent. Tavily ranks first among the 9 evaluated provider... ([source](https://www.tavily.com/blog))
 - **Tavily** — # Tavily ID: EqGHgI7P5f0t Website: www.tavily.com Legal name: AlphaAI Technologies Inc Headquarters: New York, NY, United States LinkedIn: www.linkedin.com/company/tavily · 29,639 followers Industry: Technology, Informat... ([source](https://tavily.com/knowledge/company/EqGHgI7P5f0t))
+- **Instagram** — juliangoldieai  💬 Comment TAVILY and I'll send you the free setup.      Tavily just made its own official plugin for Hermes Agent.      One message maps every page on your competitor's website.      Search, read any page... ([source](https://www.instagram.com/reel/Dfy52zXBxZO))
+- **Tavily API Pricing: Credits and Rate Limits (2026)** — Tavily is a search API built for AI agents and retrieval-augmented generation (RAG, where an app fetches fresh text and hands it to a language model).  You copy a key from the dashboard, send HTTPS requests, and get back... ([source](https://www.activepieces.com/blog/tavily-api-pricing-credits-and-rate-limits-2026))
 
 ## Key people
 
@@ -37,17 +39,17 @@ Source: https://techcrunch.com/2025/08/06/tavily-raises-25m-to-connect-ai-agents
 # Tavily  ## Tavily Overview  ##  Year Founded  2024  Year Founded  ##  Status  Private  ##  Employees  91  Employees  ##  Latest Deal Type  M&A  (Announced)  ##  Latest Deal Amount  $275M  ##  Investors  2  ### Tavily General Information  #### Description  Developer of search engine technology desi
 Source: https://pitchbook.com/profiles/company/622135-63
 
-### Tavily Launches for Startups with Free API Credits and Support | Renee Wells-Wood posted on the topic | LinkedIn
-Big news from the team at Tavily: we’re launching Tavily for Startups. 🚀 Building AI agents at an early-stage, VC-backed company (pre-seed to Series A)? We want to help you ship faster. Here’s what’s included: → Up to 100k free API credits → Hands-on support from our engineering team → Introductions
-Source: https://www.linkedin.com/posts/renee-wells-wood-64758812_big-news-from-the-team-at-tavily-were-launching-activity-7518702822683631616-6u3a
-
-### Blog | Tavily
-Today we’re introducing Tavily’s Company Search Benchmark. It reflects real agent tasks and tests how much of a company’s story search engines can uncover for your agent. Tavily ranks first among the 9 evaluated providers.  Oct 9, 2026The New Tavily Agentic Web Search Certification is Live  /Company
-Source: https://www.tavily.com/blog
-
 ### Tavily
 # Tavily ID: EqGHgI7P5f0t Website: www.tavily.com Legal name: AlphaAI Technologies Inc Headquarters: New York, NY, United States LinkedIn: www.linkedin.com/company/tavily · 29,639 followers Industry: Technology, Information and Internet Company type: Privately Held Founded: 2024 Business model: B2B 
 Source: https://tavily.com/knowledge/company/EqGHgI7P5f0t
+
+### Instagram
+juliangoldieai  💬 Comment TAVILY and I'll send you the free setup.      Tavily just made its own official plugin for Hermes Agent.      One message maps every page on your competitor's website.      Search, read any page, map a site, crawl a section, research with sources.      #HermesAgent #Tavily 
+Source: https://www.instagram.com/reel/Dfy52zXBxZO
+
+### Tavily API Pricing: Credits and Rate Limits (2026)
+Tavily is a search API built for AI agents and retrieval-augmented generation (RAG, where an app fetches fresh text and hands it to a language model).  You copy a key from the dashboard, send HTTPS requests, and get back results already trimmed for a prompt, whether you call it from your own code or
+Source: https://www.activepieces.com/blog/tavily-api-pricing-credits-and-rate-limits-2026
 
 ### Tavily Raises $25 Million to Power the Internet of Agents | Insight Partners
 Founded by Rotem Weiss (CEO), Assaf Elovic, and Yuval Rozio (in his capacity as Managing Director at Alpha Wave Global, which incubated the company 12 months ago), Tavily delivers the search layer for AI agents. Through high-performance search, web page extraction, and intelligent crawling, Tavily e
@@ -68,11 +70,11 @@ Source: https://www.investing.com/news/company-news/nebius-to-acquire-tavily-for
 3. https://pitchbook.com/profiles/company/622135-63
 4. https://www.insightpartners.com/ideas/tavily-raises-25-million-to-power-the-internet-of-agents
 5. https://www.elastic.co/customers/tavily
-6. https://www.linkedin.com/posts/renee-wells-wood-64758812_big-news-from-the-team-at-tavily-were-launching-activity-7518702822683631616-6u3a
-7. https://www.tavily.com/blog
-8. https://tavily.com/knowledge/company/EqGHgI7P5f0t
-9. https://www.tavily.com/solutions/tech
-10. https://www.activepieces.com/blog/tavily-api-pricing-credits-and-rate-limits-2026
+6. https://tavily.com/knowledge/company/EqGHgI7P5f0t
+7. https://www.instagram.com/reel/Dfy52zXBxZO
+8. https://www.activepieces.com/blog/tavily-api-pricing-credits-and-rate-limits-2026
+9. https://aws.amazon.com/marketplace/pp/prodview-yih5oy45rmsu2?sr=0-2&ref_=ucaf&applicationId=AWSMPContessa
+10. https://aimultiple.com/tavily-alternatives
 11. https://www.cbinsights.com/company/tavily/people
 12. https://www.investing.com/news/company-news/nebius-to-acquire-tavily-for-realtime-search-in-ai-agents-93CH-4497284
 13. https://ng.investing.com/news/company-news/nebius-to-acquire-tavily-for-realtime-search-in-ai-agents-93CH-2334394
@@ -84,4 +86,4 @@ Source: https://www.investing.com/news/company-news/nebius-to-acquire-tavily-for
 2. This meeting is for exploring a partnership for meeting-prep tooling — what needs to be true by the end of it for you to call it time well spent?
 3. We bring meeting-prep tooling built on the Tavily API — where would that fit best in what you are building, and what would you want from a partner in return?
 4. For an API partnership with startup credits to work, what would each side need to commit in the first 90 days?
-5. A recent story was headlined "Tavily Launches for Startups with Free API Credits and Support" — how does that affect what a partner could build with you this year?
+5. A recent story was headlined "Tavily API Pricing: Credits and Rate Limits (2026)" — how does that affect what a partner could build with you this year?

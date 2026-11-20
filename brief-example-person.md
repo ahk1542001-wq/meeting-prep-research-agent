@@ -1,8 +1,10 @@
 # Meeting Prep Brief: Satya Nadella
 
-_Researched on 2026-11-20 11:13 UTC with the Tavily API._
+_Researched on 2026-11-20 11:15 UTC with the Tavily API._
 _Their role: a potential employer_
 _This meeting is for: a first conversation about joining an AI product team_
+_When: 2026-11-22 (in 2 days)_
+_Where: online (video call)_
 _Meeting purpose: interview_
 _Presenting: four years building AI agents and automation with n8n_
 _Desired outcome: an AI product role_
@@ -11,13 +13,13 @@ _Desired outcome: an AI product role_
 
 Microsoft, under Satya Nadella’s leadership, is a technology company that builds a large cloud‑computing business, has acquired Activision Blizzard and LinkedIn, and invested more than $10 billion in OpenAI. The company has pivoted away from hardware toward cloud‑based services and cross‑platform compatibility, and its offerings include computing platforms, developer tools, the Xbox gaming system, the Bing search engine, the Surface line of tablets, and cloud infrastructure and services.
 
-## Recent developments (last month)
+## Recent developments (last week)
 
-At Microsoft Ignite 2026, Satya Nadella announced that Copilot would become a full work platform with Word, Excel, and PowerPoint built in, and introduced Autopilot, Microsoft IQ, and Agent 365 with AI cost management. Nadella also highlighted the Microsoft AI Transparency Initiative, which includes expanding collaboration in NIST's Agent Standards Initiative and the general availability of next-generation Cobalt 200 VMs. Additionally, he announced the availability of Microsoft Decision 1.1 and the new distributed managed database HorizonDB.
+Microsoft CEO Satya Nadella introduced Copilot, an AI work tool, as a new operating system for work. He also emphasized the company's vision to become a complete infrastructure provider for enterprise AI. Nadella mentioned the company's voluntary exit offer to give employees greater career flexibility as AI reshapes the workplace. Additionally, he shared insights on the future of the firm in an AI-driven economy, highlighting the importance of the loop between human capital and AI. Nadella also discussed the ongoing challenge of patching AI-discovered bugs, comparing it to a Y2K-like period of adjustment.
 
-- **Microsoft Ignite 2026 Announcements: Full Recap | Witivio** — Microsoft Ignite 2026 runs from November 17 to 20, 2026, in San Francisco and online. In the November 17 keynote, Satya Nadella described Copilot as “the new OS for work”. Three announcements define the event: Copilot be... ([source](https://www.witivio.com/en/blog/microsoft-ignite-2026-announcements))
-- **Satya Nadella - Latest News and Updates - WSJ.com** — ## June 2023  Tech  ### Microsoft CEO Satya Nadella Says $75 Billion Activision Deal Won’t Block Competition  Satya Nadella and Activision CEO Bobby Kotick say the Call of Duty franchise and other games will be available... ([source](https://www.wsj.com/topics/person/satya-nadella))
-- **Satya Nadella Microsoft Ignite 2026 Keynote Open** — [26:43] And that's why today we are also announcing the Microsoft AI Transparency Initiative. [26:53] There are three parts to this very important initiative. [26:58] First is we will expand our collaboration in this NIS... ([source](https://www.youtube.com/watch?v=Nv8-Km25Qj4))
+- **Satya Nadella: “AI Advances Must Lead to Tangible Results”** — CEO Nadella introduced Copilot, an AI work tool, as a new operating system for work. ... [Announcement] 18th International Accounting Forum to Be Held at... ([source](https://en.fnnews.com/news/202611181417427544))
+- **"Parlay tech advances into real outcomes": Microsoft CEO Satya Nadella unveils new models for coding, cybersecurity** — Microsoft CEO Satya Nadella on Tuesday underlined the company's vision to become a complete infrastructure provider for enterprise AI, bringing together... ([source](https://www.heraldglobe.com/news/279439981/parlay-tech-advances-into-real-outcomes-microsoft-ceo-satya-nadella-unveils-new-models-for-coding-cybersecurity))
+- **Satya Nadella explains Microsoft's voluntary exit offer amid AI-driven workplace changes** — Microsoft CEO Satya Nadella said the company's voluntary exit offer aims to give employees greater career flexibility as AI and changing business needs reshape... ([source](https://ucapital.com/en/news/breaking/17810700))
 
 ## Key people
 
@@ -37,17 +39,17 @@ Source: https://www.cnbc.com/satya-nadella
 Satya Nadella became Microsoft's third CEO, after Bill Gates and Steve Ballmer, in 2014. Born in India in 1967, he received a master's degree in computer science from the University of Wisconsin and spent two years at Sun Microsystems before arriving at Microsoft in 1992 to promote the Windows NT op
 Source: http://www.cnbc.com/satya-nadella
 
-### Microsoft Ignite 2026 Announcements: Full Recap | Witivio
-Microsoft Ignite 2026 runs from November 17 to 20, 2026, in San Francisco and online. In the November 17 keynote, Satya Nadella described Copilot as “the new OS for work”. Three announcements define the event: Copilot becomes a full work platform, with Word, Excel and PowerPoint built in and an auto
-Source: https://www.witivio.com/en/blog/microsoft-ignite-2026-announcements
+### Satya Nadella: “AI Advances Must Lead to Tangible Results”
+CEO Nadella introduced Copilot, an AI work tool, as a new operating system for work. ... [Announcement] 18th International Accounting Forum to Be Held at
+Source: https://en.fnnews.com/news/202611181417427544
 
-### Satya Nadella - Latest News and Updates - WSJ.com
-## June 2023  Tech  ### Microsoft CEO Satya Nadella Says $75 Billion Activision Deal Won’t Block Competition  Satya Nadella and Activision CEO Bobby Kotick say the Call of Duty franchise and other games will be available to competitors after the acquisition.  By  ## March 2023  Tech  ### Microsoft A
-Source: https://www.wsj.com/topics/person/satya-nadella
+### "Parlay tech advances into real outcomes": Microsoft CEO Satya Nadella unveils new models for coding, cybersecurity
+Microsoft CEO Satya Nadella on Tuesday underlined the company's vision to become a complete infrastructure provider for enterprise AI, bringing together
+Source: https://www.heraldglobe.com/news/279439981/parlay-tech-advances-into-real-outcomes-microsoft-ceo-satya-nadella-unveils-new-models-for-coding-cybersecurity
 
-### Satya Nadella Microsoft Ignite 2026 Keynote Open
-[26:43] And that's why today we are also announcing the Microsoft AI Transparency Initiative. [26:53] There are three parts to this very important initiative. [26:58] First is we will expand our collaboration in this NIST's Agent Standards Initiative, drawing on its research [27:07] to help the deve
-Source: https://www.youtube.com/watch?v=Nv8-Km25Qj4
+### Satya Nadella explains Microsoft's voluntary exit offer amid AI-driven workplace changes
+Microsoft CEO Satya Nadella said the company's voluntary exit offer aims to give employees greater career flexibility as AI and changing business needs reshape
+Source: https://ucapital.com/en/news/breaking/17810700
 
 ### Satya Nadella - Wikipedia
 | People | |  |  |  --- | | Founders |  Bill Gates  Paul Allen | | Board of directors |  Satya Nadella (Chairman and CEO)  Reid Hoffman  Hugh Johnston  Teri List  Catherine MacGregor  Mark Mason "Mark Mason (executive)")  Sandi Peterson  Penny Pritzker  Carlos A. Rodriguez  Charles Scharf  John W. S
@@ -68,20 +70,19 @@ Source: https://www.cnbc.com/2020/02/21/microsoft-senior-leadership-team-under-s
 3. http://www.cnbc.com/satya-nadella
 4. https://www.ebsco.com/research-starters/biography/satya-nadella
 5. https://en.wikipedia.org/wiki/Satya_Nadella
-6. https://www.witivio.com/en/blog/microsoft-ignite-2026-announcements
-7. https://www.wsj.com/topics/person/satya-nadella
-8. https://www.youtube.com/watch?v=Nv8-Km25Qj4
-9. https://www.youtube.com/watch?v=8Wtr78o1wnI
-10. https://x.com/satyanadella/status/2122793040058442116
+6. https://en.fnnews.com/news/202611181417427544
+7. https://www.heraldglobe.com/news/279439981/parlay-tech-advances-into-real-outcomes-microsoft-ceo-satya-nadella-unveils-new-models-for-coding-cybersecurity
+8. https://ucapital.com/en/news/breaking/17810700
+9. https://linkedin.com/in/satya-nadella-3145136
+10. https://www.theverge.com/tech/1037157/microsoft-ceo-satya-nadella-doesnt-know-when-the-rush-to-patch-ai-discovered-bugs-will-end
 11. https://www.cnbc.com/2020/02/21/microsoft-senior-leadership-team-under-satya-nadella.html
 12. https://www.cnbc.com/2020/02/21/microsoft-senior-leadership-team-under-satya-nadella.html?msockid=01da2c4b13506af007e33a8412a96bde
 13. https://news.microsoft.com/source/exec/satya-nadella
-14. https://linkedin.com/in/satya-nadella-3145136
 
 ## Questions to ask
 
 1. As a potential employer — what do you most want to get out of this meeting?
 2. This meeting is for a first conversation about joining an AI product team — what needs to be true by the end of it for you to call it time well spent?
-3. My background is four years building AI agents and automation with n8n — where would that experience actually get used in this team?
-4. I am hoping this process leads to an AI product role — what are the next steps, and who makes the final decision?
-5. A recent story was headlined "Microsoft Ignite 2026 Announcements: Full Recap" — how is that shaping the team's work right now?
+3. The meeting is in 2 days (2026-11-22) — which of the recent developments above is most likely to come up first?
+4. My background is four years building AI agents and automation with n8n — where would that experience actually get used in this team?
+5. I am hoping this process leads to an AI product role — what are the next steps, and who makes the final decision?

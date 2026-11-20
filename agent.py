@@ -8,15 +8,18 @@ briefing you can read in two minutes before the meeting.
 Usage:
     python agent.py "Acme Corp"
     python agent.py "Acme Corp" --relationship "a prospective client" \
-        --agenda "a first demo" --purpose sales \
-        --offering "our onboarding service" --goal "a paid pilot"
+        --agenda "a first demo" --when 2026-11-25 --where "online" \
+        --purpose sales --offering "our onboarding service" \
+        --goal "a paid pilot"
     python agent.py "Acme Corp" --context "partnership discussion"
     python agent.py "Jane Smith, CEO of Acme" --out jane.md
 
 The questions at the end of the brief are driven by the meeting
-context: --relationship / --agenda / --purpose / --offering / --goal
-(structured) or --context (free text). With no context at all, the
-brief asks for it instead of printing generic questions.
+context: --relationship / --agenda / --when / --where / --purpose /
+--offering / --goal (structured) or --context (free text). A meeting
+date within a week also narrows the news search to the last week.
+With no context at all, the brief asks for it instead of printing
+generic questions.
 
 Requires a Tavily API key in the TAVILY_API_KEY environment variable
 (or in a .env file next to this script). Get one at https://tavily.com
@@ -70,6 +73,37 @@ def tavily_search(api_key, query, topic="general", time_range=None,
     )
     with urllib.request.urlopen(req, timeout=60) as resp:
         return json.loads(resp.read().decode("utf-8"))
+
+
+WHEN_FORMATS = (
+    "%Y-%m-%d",
+    "%Y-%m-%d %H:%M",
+    "%Y-%m-%dT%H:%M",
+    "%d %b %Y",
+    "%d %B %Y",
+    "%b %d, %Y",
+    "%B %d, %Y",
+)
+
+
+def parse_meeting_when(text):
+    """Parse a meeting date the user typed, or return None.
+
+    Deliberately strict: only the listed formats count. Anything
+    else is shown in the brief verbatim but never guessed at, so
+    the recency weighting below only ever acts on a date the user
+    actually gave in a known shape."""
+    from datetime import datetime as _dt
+
+    text = (text or "").strip()
+    if not text:
+        return None
+    for fmt in WHEN_FORMATS:
+        try:
+            return _dt.strptime(text, fmt).date()
+        except ValueError:
+            continue
+    return None
 
 
 def slugify(text):
@@ -175,6 +209,21 @@ def build_questions(subject, context, structured, overview, news, people):
             "true by the end of it for you to call it time "
             "well spent?"
         )
+    days_until = structured.get("days_until")
+    when_text = (structured.get("when") or "").strip()
+    if isinstance(days_until, int) and 0 <= days_until <= 3:
+        # The meeting is imminent: surface the freshest findings
+        # first by asking what is most likely to come up.
+        if days_until == 0:
+            timing = "The meeting is today"
+        elif days_until == 1:
+            timing = f"The meeting is tomorrow ({when_text})"
+        else:
+            timing = f"The meeting is in {days_until} days ({when_text})"
+        lead.append(
+            f"{timing} — which of the recent developments above "
+            "is most likely to come up first?"
+        )
     questions = list(lead)
     if kind == "sales":
         if offering:
@@ -252,7 +301,7 @@ def build_questions(subject, context, structured, overview, news, people):
                 "Of the recent developments above, is any of "
                 "it about to change what you need from us?"
             )
-    elif purpose or offering or goal or relationship or agenda:
+    elif purpose or offering or goal or relationship or agenda or when_text:
         # Structured context without a dedicated purpose template
         # (or with only some fields): frame questions from the
         # user's own words, then the findings.
@@ -316,6 +365,19 @@ def build_brief(subject, context, structured, overview, news, people):
     if (structured.get("agenda") or "").strip():
         lines.append(
             f"_This meeting is for: {structured['agenda'].strip()}_")
+    if (structured.get("when") or "").strip():
+        when_line = f"_When: {structured['when'].strip()}"
+        days_until = structured.get("days_until")
+        if isinstance(days_until, int) and days_until >= 0:
+            if days_until == 0:
+                when_line += " (today)"
+            elif days_until == 1:
+                when_line += " (tomorrow)"
+            else:
+                when_line += f" (in {days_until} days)"
+        lines.append(when_line + "_")
+    if (structured.get("where") or "").strip():
+        lines.append(f"_Where: {structured['where'].strip()}_")
     if (structured.get("purpose") or "").strip():
         lines.append(f"_Meeting purpose: {structured['purpose'].strip()}_")
     if (structured.get("offering") or "").strip():
@@ -329,7 +391,12 @@ def build_brief(subject, context, structured, overview, news, people):
     lines.append(overview.get("answer") or "No summary available.")
     lines.append("")
 
-    lines.append("## Recent developments (last month)")
+    window = (structured.get("news_window") or "month").strip()
+    lines.append(
+        "## Recent developments (last week)"
+        if window == "week"
+        else "## Recent developments (last month)"
+    )
     lines.append("")
     if news.get("answer"):
         lines.append(news["answer"])
@@ -380,7 +447,10 @@ def build_brief(subject, context, structured, overview, news, people):
             lines.append(f"{i}. {q}")
     elif not any(
         (structured.get(k) or "").strip()
-        for k in ("relationship", "agenda", "purpose", "offering", "goal")
+        for k in (
+            "relationship", "agenda", "when", "where",
+            "purpose", "offering", "goal",
+        )
     ) and not context:
         # Clarify-first: with no meeting context, generic questions
         # would be noise. Say what is missing and how to add it
@@ -398,6 +468,11 @@ def build_brief(subject, context, structured, overview, news, people):
         lines.append(
             "- `--agenda` — what this specific meeting is for"
         )
+        lines.append(
+            "- `--when` — the meeting date, e.g. 2026-11-25 "
+            "(a near date weights recent news more heavily)"
+        )
+        lines.append("- `--where` — where: in person or online, and where")
         lines.append(
             "- `--purpose` — the meeting type: sales, partnership, "
             "interview, client"
@@ -431,6 +506,12 @@ def main():
                              "client, a partner, an employer")
     parser.add_argument("--agenda", default="",
                         help="What this specific meeting is for")
+    parser.add_argument("--when", default="",
+                        help="Meeting date, e.g. 2026-11-25 (a date "
+                             "within a week weights recent news "
+                             "more heavily)")
+    parser.add_argument("--where", default="",
+                        help="Where: in person or online, and where")
     parser.add_argument("--purpose", default="",
                         help="Meeting type: sales, partnership, "
                              "interview, client (drives the questions)")
@@ -451,6 +532,8 @@ def main():
         not args.context
         and not args.relationship
         and not args.agenda
+        and not args.when
+        and not args.where
         and not args.purpose
         and not args.offering
         and not args.goal
@@ -463,6 +546,10 @@ def main():
             "partner, an employer...)? ").strip()
         args.agenda = input(
             "What is this specific meeting for? ").strip()
+        args.when = input(
+            "When is the meeting (e.g. 2026-11-25)? ").strip()
+        args.where = input(
+            "Where (in person or online, and where)? ").strip()
         args.purpose = input(
             "Meeting type (sales / partnership / interview / "
             "client / your own words): ").strip()
@@ -470,9 +557,26 @@ def main():
             "What do you want to present or propose? ").strip()
         args.goal = input(
             "What outcome do you want from the meeting? ").strip()
+    # Recency weighting: the closer the meeting, the fresher the
+    # news window. An unparseable date is kept as text only.
+    meeting_date = parse_meeting_when(args.when)
+    days_until = (
+        (meeting_date - datetime.now(timezone.utc).date()).days
+        if meeting_date
+        else None
+    )
+    news_window = (
+        "week"
+        if days_until is not None and 0 <= days_until <= 7
+        else "month"
+    )
     structured = {
         "relationship": args.relationship,
         "agenda": args.agenda,
+        "when": args.when,
+        "where": args.where,
+        "days_until": days_until,
+        "news_window": news_window,
         "purpose": args.purpose,
         "offering": args.offering,
         "goal": args.goal,
@@ -495,7 +599,7 @@ def main():
     print("[agent] Step 2/3: recent news search")
     news = tavily_search(
         api_key, f"{subject} latest news announcements",
-        topic="news", time_range="month", max_results=5)
+        topic="news", time_range=news_window, max_results=5)
 
     print("[agent] Step 3/3: key people search")
     people = tavily_search(
