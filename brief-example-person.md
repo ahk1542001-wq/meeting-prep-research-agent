@@ -1,10 +1,11 @@
 # Meeting Prep Brief: Satya Nadella
 
-_Researched on 2026-11-20 11:15 UTC with the Tavily API._
+_Researched on 2026-11-20 11:16 UTC with the Tavily API._
 _Their role: a potential employer_
 _This meeting is for: a first conversation about joining an AI product team_
 _When: 2026-11-22 (in 2 days)_
 _Where: online (video call)_
+_Why: they reached out after a referral from a former colleague_
 _Meeting purpose: interview_
 _Presenting: four years building AI agents and automation with n8n_
 _Desired outcome: an AI product role_
@@ -84,5 +85,5 @@ Source: https://www.cnbc.com/2020/02/21/microsoft-senior-leadership-team-under-s
 1. As a potential employer — what do you most want to get out of this meeting?
 2. This meeting is for a first conversation about joining an AI product team — what needs to be true by the end of it for you to call it time well spent?
 3. The meeting is in 2 days (2026-11-22) — which of the recent developments above is most likely to come up first?
-4. My background is four years building AI agents and automation with n8n — where would that experience actually get used in this team?
-5. I am hoping this process leads to an AI product role — what are the next steps, and who makes the final decision?
+4. The background here is they reached out after a referral from a former colleague — is that still the main thing on your mind, or has anything shifted since?
+5. My background is four years building AI agents and automation with n8n — where would that experience actually get used in this team?

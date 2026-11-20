@@ -9,17 +9,18 @@ Usage:
     python agent.py "Acme Corp"
     python agent.py "Acme Corp" --relationship "a prospective client" \
         --agenda "a first demo" --when 2026-11-25 --where "online" \
-        --purpose sales --offering "our onboarding service" \
-        --goal "a paid pilot"
+        --why "they asked to see it" --purpose sales \
+        --offering "our onboarding service" --goal "a paid pilot"
     python agent.py "Acme Corp" --context "partnership discussion"
     python agent.py "Jane Smith, CEO of Acme" --out jane.md
 
 The questions at the end of the brief are driven by the meeting
-context: --relationship / --agenda / --when / --where / --purpose /
---offering / --goal (structured) or --context (free text). A meeting
-date within a week also narrows the news search to the last week.
-With no context at all, the brief asks for it instead of printing
-generic questions.
+context, organised as the 5W — Who (--relationship), What
+(--agenda), When (--when), Where (--where), Why (--why) — plus your
+side of it: --purpose / --offering / --goal. Free text is also
+accepted via --context. A meeting date within a week narrows the
+news search to the last week. With no context at all, the brief
+asks for it instead of printing generic questions.
 
 Requires a Tavily API key in the TAVILY_API_KEY environment variable
 (or in a .env file next to this script). Get one at https://tavily.com
@@ -209,6 +210,7 @@ def build_questions(subject, context, structured, overview, news, people):
             "true by the end of it for you to call it time "
             "well spent?"
         )
+    why = (structured.get("why") or "").strip()
     days_until = structured.get("days_until")
     when_text = (structured.get("when") or "").strip()
     if isinstance(days_until, int) and 0 <= days_until <= 3:
@@ -223,6 +225,12 @@ def build_questions(subject, context, structured, overview, news, people):
         lead.append(
             f"{timing} — which of the recent developments above "
             "is most likely to come up first?"
+        )
+    if why:
+        lead.append(
+            f"The background here is {why} — is that still the "
+            "main thing on your mind, or has anything shifted "
+            "since?"
         )
     questions = list(lead)
     if kind == "sales":
@@ -301,7 +309,7 @@ def build_questions(subject, context, structured, overview, news, people):
                 "Of the recent developments above, is any of "
                 "it about to change what you need from us?"
             )
-    elif purpose or offering or goal or relationship or agenda or when_text:
+    elif purpose or offering or goal or relationship or agenda or when_text or why:
         # Structured context without a dedicated purpose template
         # (or with only some fields): frame questions from the
         # user's own words, then the findings.
@@ -378,6 +386,8 @@ def build_brief(subject, context, structured, overview, news, people):
         lines.append(when_line + "_")
     if (structured.get("where") or "").strip():
         lines.append(f"_Where: {structured['where'].strip()}_")
+    if (structured.get("why") or "").strip():
+        lines.append(f"_Why: {structured['why'].strip()}_")
     if (structured.get("purpose") or "").strip():
         lines.append(f"_Meeting purpose: {structured['purpose'].strip()}_")
     if (structured.get("offering") or "").strip():
@@ -448,7 +458,7 @@ def build_brief(subject, context, structured, overview, news, people):
     elif not any(
         (structured.get(k) or "").strip()
         for k in (
-            "relationship", "agenda", "when", "where",
+            "relationship", "agenda", "when", "where", "why",
             "purpose", "offering", "goal",
         )
     ) and not context:
@@ -473,6 +483,10 @@ def build_brief(subject, context, structured, overview, news, people):
             "(a near date weights recent news more heavily)"
         )
         lines.append("- `--where` — where: in person or online, and where")
+        lines.append(
+            "- `--why` — why this meeting is happening: who called "
+            "it, and why now"
+        )
         lines.append(
             "- `--purpose` — the meeting type: sales, partnership, "
             "interview, client"
@@ -512,6 +526,9 @@ def main():
                              "more heavily)")
     parser.add_argument("--where", default="",
                         help="Where: in person or online, and where")
+    parser.add_argument("--why", default="",
+                        help="Why this meeting is happening: who "
+                             "called it, and why now")
     parser.add_argument("--purpose", default="",
                         help="Meeting type: sales, partnership, "
                              "interview, client (drives the questions)")
@@ -534,6 +551,7 @@ def main():
         and not args.agenda
         and not args.when
         and not args.where
+        and not args.why
         and not args.purpose
         and not args.offering
         and not args.goal
@@ -550,6 +568,9 @@ def main():
             "When is the meeting (e.g. 2026-11-25)? ").strip()
         args.where = input(
             "Where (in person or online, and where)? ").strip()
+        args.why = input(
+            "Why is this meeting happening (who called it, "
+            "why now)? ").strip()
         args.purpose = input(
             "Meeting type (sales / partnership / interview / "
             "client / your own words): ").strip()
@@ -575,6 +596,7 @@ def main():
         "agenda": args.agenda,
         "when": args.when,
         "where": args.where,
+        "why": args.why,
         "days_until": days_until,
         "news_window": news_window,
         "purpose": args.purpose,

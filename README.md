@@ -38,8 +38,9 @@ walk in cold.
 4. **Suggests questions to ask** in the meeting, driven by the meeting
    context first and the research second — a sales call and a job
    interview with the same company get different questions. Give the
-   context in structured form (`--relationship`, `--agenda`,
-   `--when`, `--where`, `--purpose`, `--offering`, `--goal`) or
+   context in structured form — the 5W (`--relationship`,
+   `--agenda`, `--when`, `--where`, `--why`) plus `--purpose`,
+   `--offering`, `--goal` — or
    as free text (`--context`). With no context at all, the brief does
    not print generic questions: it asks for the context instead
    (clarify-first). Nothing is invented either way — context questions
@@ -75,19 +76,27 @@ form — the questions are built from it:
 ```bash
 python agent.py "Acme Corp" --relationship "a prospective client" \
     --agenda "a first demo" --when 2026-11-25 --where "online" \
-    --purpose sales --offering "our onboarding service" \
-    --goal "a paid pilot"
+    --why "they asked to see it" --purpose sales \
+    --offering "our onboarding service" --goal "a paid pilot"
 ```
 
-The seven fields, in order: `--relationship` is who they are to
-you (a prospective client, a partner, an employer), `--agenda` is
-what this specific meeting is for, `--when` is the meeting date,
-`--where` is the place (in person or online), `--purpose` is the
-meeting type (sales, partnership, interview, client, or your own
-words), `--offering` is what you want to present or propose, and
-`--goal` is the outcome you want. Any subset helps; run
-interactively with no context and the agent asks for all seven
-before it starts.
+The context is organised as the **5W**, plus your side of the
+meeting:
+
+- **Who** — the subject (the command argument) and
+  `--relationship`: who they are to you (a prospective client, a
+  partner, an employer)
+- **What** — `--agenda`: what this specific meeting is for
+- **When** — `--when`: the meeting date
+- **Where** — `--where`: the place (in person or online, and where)
+- **Why** — `--why`: why this meeting is happening — who called
+  it, and why now
+
+Your side: `--purpose` is the meeting type (sales, partnership,
+interview, client, or your own words), `--offering` is what you
+want to present or propose, and `--goal` is the outcome you want.
+Any subset helps; run interactively with no context and the agent
+asks for all eight fields before it starts.
 
 The date does real work: a meeting within a week narrows the news
 search to the last week instead of the last month, and a meeting
