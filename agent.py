@@ -80,6 +80,68 @@ def top_results(search, limit=3):
     return out
 
 
+def clean_title(title, limit=110):
+    """Make a search-result title safe to quote inside a question."""
+    title = title.replace("*", "").replace('"', "'").strip()
+    # Long titles often append site/author cruft after a pipe
+    # ("Headline | Person posted on the topic | ..."); when the
+    # first segment already reads as a full headline, keep only it.
+    if " | " in title:
+        first = title.split(" | ", 1)[0].strip()
+        if len(first) >= 40:
+            title = first
+    if len(title) > limit:
+        title = title[:limit].rsplit(" ", 1)[0].rstrip(" ,;:") + "..."
+    return title
+
+
+def build_questions(subject, context, overview, news, people):
+    """Questions to ask in the meeting, derived only from what the
+    research actually found. Deterministic, like the rest of the
+    brief: news questions quote real headlines from the results,
+    the remaining questions point at sections of this brief or at
+    the meeting context the user supplied. Nothing is invented."""
+    questions = []
+    for item in top_results(news, 5):
+        if len(questions) >= 2:
+            break
+        title = clean_title(item["title"])
+        # Very short titles are page labels ("Blog | Tavily"),
+        # not headlines — never build a question on one. Topic
+        # index pages ("X - Latest News and Updates") are labels
+        # too, however long they are.
+        if len(title) < 30 or "latest news" in title.lower():
+            continue
+        questions.append(
+            f'A recent story was headlined "{title}" — '
+            "what is the background to it, and where is it heading?"
+        )
+    if context:
+        questions.append(
+            f'This meeting\'s context is "{context}" — what would '
+            "a successful outcome look like from your side?"
+        )
+    if (people.get("answer") or "").strip():
+        questions.append(
+            "The key people above lead this area — what are their "
+            "current priorities, and what do they look for first "
+            "when someone brings them a proposal?"
+        )
+    if (overview.get("answer") or "").strip():
+        questions.append(
+            f"The snapshot above summarises what {subject} does — "
+            "which part of that is the top priority right now, and "
+            "what is the biggest obstacle to it?"
+        )
+    if news.get("answer"):
+        questions.append(
+            "Of the recent developments above, which one matters "
+            "most for the next quarter — and which is most likely "
+            "to be misunderstood by outsiders?"
+        )
+    return questions[:5]
+
+
 def build_brief(subject, context, overview, news, people):
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines = []
@@ -134,6 +196,19 @@ def build_brief(subject, context, overview, news, people):
                 urls.append(u)
     for i, u in enumerate(urls, 1):
         lines.append(f"{i}. {u}")
+    lines.append("")
+
+    lines.append("## Questions to ask")
+    lines.append("")
+    questions = build_questions(subject, context, overview, news, people)
+    if questions:
+        for i, q in enumerate(questions, 1):
+            lines.append(f"{i}. {q}")
+    else:
+        lines.append(
+            "Not enough was found about this subject to suggest "
+            "questions — consider a more specific name."
+        )
     lines.append("")
     return "\n".join(lines)
 
