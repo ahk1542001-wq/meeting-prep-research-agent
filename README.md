@@ -17,7 +17,7 @@ run from the guided form to the finished brief — the optional LLM
 layer is on, so the executive summary and the questions are drafted
 from the search results with a source link on every claim.
 
-[Watch the UI demo video](meeting-prep-ui-demo-v1.mp4)
+[Watch the UI demo video](meeting-prep-ui-demo-v2.mp4)
 
 A real run of the CLI agent, recorded in the terminal (about 40
 seconds):
