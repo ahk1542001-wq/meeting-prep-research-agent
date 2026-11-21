@@ -389,6 +389,14 @@ def llm_questions(cfg, subject, context, structured, sources,
         "outcome they want.\n"
         "- Specific questions worth asking out loud, not generic "
         "ones.\n"
+        "- Each question must be about a DIFFERENT aspect (for "
+        "example: product fit, terms and limits, traction, "
+        "roadmap, risks). Never ask the same question five ways.\n"
+        "- Do not repeat the goal or offering phrase in more than "
+        "one question.\n"
+        "- Do not use the subject's own marketing claims as the "
+        "premise of a question. Ask about facts, terms, limits, "
+        "and next steps instead.\n"
         "Output only a numbered list, 1. to 5., one question "
         "per line."
     )
@@ -438,6 +446,34 @@ def llm_questions(cfg, subject, context, structured, sources,
         kept.append(q)
     if len(kept) < 3:
         return None
+    # Frame guard: the subtler failure mode is five DIFFERENT
+    # facts dressed in one shared frame — the same long phrase
+    # (usually the goal, restated) closing every question. If a
+    # long substring is shared by most of the set, or the goal's
+    # own words close most of the set, the draft is one question
+    # re-dressed: discard it and use the deterministic questions.
+    def _norm(q):
+        return re.sub(r"[^a-z0-9 ]", "", q.lower())
+    norms = [_norm(q) for q in kept]
+    def _shared_frame(a, b, size=24):
+        grams = {a[i:i + size] for i in range(len(a) - size + 1)}
+        return any(b[i:i + size] in grams
+                   for i in range(len(b) - size + 1))
+    framed = 0
+    for i, q in enumerate(norms):
+        if any(j != i and _shared_frame(q, norms[j])
+               for j in range(len(norms))):
+            framed += 1
+    if framed >= 3:
+        return None
+    goal_words = _content_words(
+        (structured or {}).get("goal", "")) - {"api"}
+    if len(goal_words) >= 2:
+        hits = sum(
+            1 for q in kept
+            if len(_content_words(q) & goal_words) >= 2)
+        if hits >= 3:
+            return None
     return kept[:5]
 
 
