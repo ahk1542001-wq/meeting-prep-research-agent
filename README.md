@@ -12,7 +12,15 @@ research agent theme).
 
 ## Demo
 
-A real run of the agent, recorded in the terminal (about 40 seconds):
+**The web UI, recorded live** (about 90 seconds, narrated): a real
+run from the guided form to the finished brief — the optional LLM
+layer is on, so the executive summary and the questions are drafted
+from the search results with a source link on every claim.
+
+[Watch the UI demo video](meeting-prep-ui-demo-v1.mp4)
+
+A real run of the CLI agent, recorded in the terminal (about 40
+seconds):
 
 ![Demo: the agent researching Tavily and writing a brief](demo.gif)
 
@@ -41,14 +49,17 @@ walk in cold.
    context in structured form — the 5W (`--relationship`,
    `--agenda`, `--when`, `--where`, `--why`) plus `--purpose`,
    `--offering`, `--goal` — or
-   as free text (`--context`). With no context at all, the brief does
-   not print generic questions: it asks for the context instead
-   (clarify-first). Nothing is invented either way — context questions
-   quote your own words, headline questions quote real headlines.
+   as free text (`--context`). With no context at all, the brief
+   leads with the clarify-first ask (an Assumptions section naming
+   the fields that would sharpen it) and still gives general
+   questions drawn from the research — never a dead end. Nothing is
+   invented either way — context questions quote your own words,
+   headline questions quote real headlines.
 
 No LLM key is needed. The synthesis is deterministic: it composes Tavily's
 own answer summaries and ranked source excerpts, which keeps the brief
-fast, cheap (3 Tavily searches per brief) and free of invented facts.
+fast, cheap (7 Tavily searches per brief) and grounded in the returned
+sources.
 
 ## Quick start
 
@@ -94,7 +105,9 @@ meeting:
 
 Your side: `--purpose` is the meeting type (sales, partnership,
 interview, client, or your own words), `--offering` is what you
-want to present or propose, and `--goal` is the outcome you want.
+want to present or propose, `--goal` is the outcome you want, and
+`--fallback` is what you would settle for if that outcome is not
+reachable today.
 Any subset helps; run interactively with no context and the agent
 asks for all eight fields before it starts.
 
@@ -104,6 +117,85 @@ within three days adds a question about which fresh development is
 most likely to come up first.
 
 The brief is printed to the terminal and saved as `brief-<subject>.md`.
+
+## Optional: LLM-written summary and questions
+
+With no extra configuration the agent is fully deterministic —
+the brief is assembled from the search results by template, and
+that never changes. If you set one API key, an LLM additionally
+drafts the **executive summary** and the **questions** from the
+search results:
+
+```bash
+# Nebius Token Factory (default model: meta-models/muse-spark-open)
+export NEBIUS_API_KEY=...
+
+# or the Meta Model API (default model: muse-spark-1.3)
+export META_MODEL_API_KEY=...
+```
+
+Set `NEBIUS_MODEL` / `META_MODEL` to pick a different model, and
+`MEETING_PREP_LLM=off` (or `--no-llm`) to disable the layer.
+
+The guardrails are enforced in code, not just in the prompt:
+
+- The prompt restricts the model to the provided search results,
+  cited by source number; it may not use its own knowledge or
+  invent facts.
+- Citations are repaired deterministically from source numbers
+  to the real links, and every URL in a draft is then checked
+  against the URLs the search actually returned. A draft that
+  cites anything else is discarded.
+- Questions are kept one by one: a question without a valid
+  source link is dropped, near-duplicate questions (the same
+  source claim re-dressed) are dropped by a repetition cap, and
+  if too few distinct questions survive, the deterministic
+  questions are used.
+- The check verifies **links, not claims**: it proves a citation
+  points at a real source the search returned, not that the
+  sentence fairly states what that source says. Drafted text is
+  labelled as a draft in the brief — read its sources.
+- A missing key, a failed call, or a failed check all fall back
+  to the deterministic brief, unchanged. The clarify-first rule
+  applies to the LLM too: with no meeting context, it is never
+  asked to draft questions.
+
+[`brief-example-llm.md`](brief-example-llm.md) is the Tavily
+example below re-run with the layer on — compare its executive
+summary and questions with [`brief-example.md`](brief-example.md).
+
+## Web UI
+
+Prefer a guided page to flags? The same pipeline runs behind a
+one-page local web UI, with two ways to give it the context:
+
+- **Chat intake** (when an LLM key is configured, see below): the
+  agent asks one short question at a time and you answer in your
+  own words — built for people who do not know what a form wants
+  from them. The question order and the "ready" rule are fixed in
+  code; the model only extracts what you actually said and never
+  fills a field you did not state. Say "skip" for anything, watch
+  the collected context build up as a summary, and switch to the
+  form at any point to edit it directly.
+- **Guided form**: the 5W context is collected one step at a time,
+  each step a single question with examples.
+
+Either way, the brief is rendered as a designed document — a strip
+of the context used, then sections, with the questions set as
+numbered items:
+
+```bash
+python ui.py   # then open http://127.0.0.1:8090
+```
+
+Standard library only, bound to localhost. The brief is also
+saved as `brief-<subject>.md`, exactly as the CLI writes it.
+
+![The Meeting Prep web UI: the guided 5W steps](ui-screenshot.png)
+
+![A brief rendered by the web UI](ui-brief.png)
+
+![The chat intake: the agent asks, the context builds up](ui-chat.png)
 
 ## Example
 
